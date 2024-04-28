@@ -1,0 +1,28 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SSE Example</title>
+</head>
+<body>
+<h1>SSE Example</h1>
+<div id="output"></div>
+
+<script>
+    const outputDiv = document.getElementById('output');
+
+    const eventSource = new EventSource('http://localhost:3000/api/updates');
+
+    eventSource.addEventListener('message', (event) => {
+        const eventData = JSON.parse(event.data);
+        const timestamp = eventData.timestamp;
+        outputDiv.innerHTML += `<p>Received event at: ${timestamp}</p>`;
+    });
+
+    eventSource.addEventListener('error', (error) => {
+        console.error('SSE error:', error);
+    });
+</script>
+</body>
+</html>
