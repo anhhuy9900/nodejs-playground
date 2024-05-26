@@ -3,7 +3,6 @@ import moment from "moment-timezone";
 
 function runSchedulerEveryMinute() {
     console.log('========= runSchedulerEveryMinute ============== ')
-    let time = 0;
     const job = scheduler.scheduleJob('*/1 * * * *', function(){
         console.log("\n\n------------------------------------");
         console.log('LOG: ', 'runSchedulerEveryMinute: ', "The action will run very minutes once!");
