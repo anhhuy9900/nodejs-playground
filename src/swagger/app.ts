@@ -3,7 +3,7 @@ import express, { Request, Response } from 'express';
 import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import path from 'path';
-import apis from './apis/apis'
+import index from './apis'
 
 const app = express();
 const port = 3000;
@@ -29,7 +29,7 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-app.use('/', apis)
+app.use('/', index)
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
