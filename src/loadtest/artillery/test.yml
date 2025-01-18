@@ -1,0 +1,19 @@
+config:
+  target: 'http://localhost:8082'
+  phases:
+    - duration: 60  # Duration of the test in seconds
+      arrivalRate: 10  # Number of new virtual users created per second
+      rampTo: 50  # Gradually ramp up the number of users
+  defaults:
+    headers:
+      Content-Type: application/json
+      Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyMywidXNlcm5hbWUiOiJqb2huZG9lIiwiaWF0IjoxNzI4NTQ5NTA2LCJleHAiOjE3Mjg2MzU5MDZ9.I97wKk-c88rd_d97EpR2bX9LWSVF4v8SX5WdmkUWTcs
+
+scenarios:
+  - flow:
+      - get:
+          url: "/external/v1/account-payment/mode"
+          qs:
+            num: "A123456"
+            pId: "970416"
+            pCode: ""  # Provide the actual value or keep empty if optional

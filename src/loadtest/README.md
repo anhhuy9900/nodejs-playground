@@ -1,0 +1,1 @@
+loadtest http://localhost:8000/loadtest -t 20 -c 10 --rps 10

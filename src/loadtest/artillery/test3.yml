@@ -1,0 +1,44 @@
+config:
+  target: 'http://localhost:8082'
+  phases:
+    # Phase 1: Warm-up (gradual ramp-up)
+    - duration: 30  # Duration of the warm-up phase (in seconds)
+      arrivalRate: 100  # Start with 100 users per second
+      rampTo: 500  # Gradually ramp up to 500 users per second
+
+    # Phase 2: Sustained high load
+    - duration: 60  # Run this phase for 1 minute
+      arrivalRate: 300  # Maintain 500 users per second for this phase
+
+    # Phase 3: Spike load (stress test)
+    - duration: 30  # This phase will last 30 seconds
+      arrivalRate: 100  # Increase to 1000 users per second for a spike load
+
+    # Phase 4: Cool down
+    - duration: 30  # Gradual cool down over 30 seconds
+      arrivalRate: 200  # Decrease load to 500 users per second
+
+#    # Sustained high load at 1000 requests per second
+#    - duration: 10  # Run the test for 120 seconds (adjust as needed)
+#      arrivalRate: 500  # Generate 1000 new virtual users per second
+
+#      # Sustained high load at 1000 requests per second
+#      - duration: 120  # Run the test for 600 seconds (10 minutes)
+#        arrivalRate: 1000  # Generate 1000 new virtual users (requests) per second
+  defaults:
+    headers:
+      Content-Type: application/json
+
+  processor: "./functions.js"
+
+scenarios:
+  - flow:
+      - function: "getParams"
+      - get:
+          url: "/external/v1/account-payment/mode"
+          headers:
+            Authorization: "{{ token }}"
+          qs:
+            num: "{{ num }}"
+            pId: "{{ pId }}"
+
