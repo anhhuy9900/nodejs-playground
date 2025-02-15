@@ -28,3 +28,7 @@ ts-node file-path
 ## Guideline
 
 * https://nodejs.org/api/
+
+#### NPM packages
+- https://www.npmjs.com/package/syncpack
+- https://www.npmjs.com/package/syncpack
