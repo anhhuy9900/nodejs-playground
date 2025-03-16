@@ -1,10 +1,10 @@
-import moment from "moment-timezone";
+import moment from 'moment-timezone';
 
 function showExTimeInfo() {
-    const momentVal = moment().format('YYYY-MM-DD HH:mm:ss')
-    console.log("\n------------------------------------");
-    console.log('LOG: ', 'EXAMPLE2 -> showExTimeInfo - momentVal', momentVal);
-    console.log("------------------------------------");
+  const momentVal = moment().format('YYYY-MM-DD HH:mm:ss');
+  console.log('\n------------------------------------');
+  console.log('LOG: ', 'EXAMPLE2 -> showExTimeInfo - momentVal', momentVal);
+  console.log('------------------------------------');
 }
 
-export { showExTimeInfo }
+export { showExTimeInfo };

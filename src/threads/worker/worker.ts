@@ -1,11 +1,12 @@
-import { parentPort, workerData } from 'worker_threads';
+import { parentPort } from 'worker_threads';
 
 function delay(duration: number) {
-    const startTime = Date.now();
-    while(Date.now() - startTime < duration) {
-      //event loop is blocked...
-    }
+  const startTime = Date.now();
+  while (Date.now() - startTime < duration) {
+    //event loop is blocked...
+  }
 }
+
 let counter = 0;
 // for (let i = 0; i < 900000000; i++) {
 //   counter++;
