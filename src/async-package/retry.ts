@@ -7,21 +7,22 @@ import axios from 'axios';
 
 // Function to fetch data from an API
 const fetchData = (callback: (err: Error | null, result?: any) => void) => {
-    console.log("=============== FETCH DATA ===============")
-    axios.get('https://dummyapi.io/data/v1/user?limit=100')
-        .then(response => callback(null, response.data))
-        .catch(error => callback(error));
+  console.log('=============== FETCH DATA ===============');
+  axios
+    .get('https://dummyapi.io/data/v1/user?limit=100')
+    .then((response) => callback(null, response.data))
+    .catch((error) => callback(error));
 };
 
 // Using async.retry to retry the fetch operation up to 5 times
 async.retry(
-    { times: 5, interval: 8000 }, // Retry up to 5 times with a 1-second interval between retries
-    fetchData,
-    (err, result) => {
-        if (err) {
-            console.error('Failed to fetch data after 5 retries:', err.message);
-        }
-
-        console.log('Fetched data successfully:', result);
+  { times: 5, interval: 8000 }, // Retry up to 5 times with a 1-second interval between retries
+  fetchData,
+  (err, result) => {
+    if (err) {
+      console.error('Failed to fetch data after 5 retries:', err.message);
     }
+
+    console.log('Fetched data successfully:', result);
+  }
 );
