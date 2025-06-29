@@ -1,0 +1,13 @@
+{
+    "type": "service_account",
+    "project_id": "abstract-water-464404-p6",
+    "private_key_id": "7e796616fafbae90bb75b1b70abe6cb5d7b14852",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDWVDijsjHmKAad\nmAeYfK1KVV5wSINW3SXpGP/2E58/KBUz30DlOJBi5ijAVouuCxTjMY7yse+DQw1e\nisrnQSaug0dOWMYozJBSXZAHR2JmnIplvX31DppKrn/CiObvM34TOII/gfNtwUHy\nO94NlkcQBzo+STF3uk3wWs0uwf70xqgUyQXKx9dcEmTCIX6gxE5wJ1xSXSefIQp2\nyT3JnL9KnfEOpsoaSJiAIbh0Mv5L/HUwOU+qBECzomnmA6pYh1wQBuGZOrxBijQh\nG4hcojT1hfDIz8fdO6KKdXVUyqlISlG4bT5ywOeMyPppRzASAjf0rHfMHh8Ealtv\npOvxnNpdAgMBAAECggEAFHW5axsC0MNHumSTGQyR0v4/mSgQQvWyfZl8LxFOyuMj\nKa6pYxhZZC+E0AjoUEbQ3s1SJZCJ2jXHlsZYuecKGm+qxMEMYu8AOfSiNVJXA4+f\nAI5XHKfLtSRfoCzxyqos4giAxS+SaDWiJiMZPqJ2tIIpc7JeArK/Z5nra11r3rwp\nVu9f3JO6O0AwPo6eeZwdwPsViabBQS/7qOmcibouAGShh2P3Q3OIIrs34WyQ65AN\nBPe732sE5lOnXozKkSRevyieFO0dzwNlY8fU/uKLGW+1IxEnzCQXDaQuCbhUySGm\nA8atjGWQjgPlJeLsXYNDrduB8gu3sN5NqmckKqV26wKBgQDs5ZQ2FzAbBfqFxQvh\nSVkKDLH14VqkQTJ++R1z1el1A6xoqL85L0FGhMfyuhLrpODiXSN1dqhOqdIVlQ95\nEKuKOIXcbbXr3RE6Xk2xgyml3oaQlcPXeHJfhRPibrZpI9gw1opO3/cWTDRFYCgV\noVXRC4F6hbUhPJqH6ewx8MEh7wKBgQDnnMKEesdr9Ri3iDP/Advx5bucVGwcLwH7\nK/GGVsBEFOZyYCfS9XwwoN6lv9X0DaINcj7agFVZ6Yvlm04aDgH5mBPJ/5jcosHr\nOG6dY7PhILCVAHOBXdrbKhOWWo4rm+uQqgsze7f8OK95vsZBqEqjHLuPRGs5tCuu\nv2ReMDskcwKBgB6so4JVgk8deRD1MNKdEsBwYGK8KWZ3Yrh6PUwQeMhED4EFyKz4\n53TgIJvXaDfHA6+L69l74dM9vgw5XuWIOQ4Ov5aJRjMiTubF6z1/BFeL9tSl79Po\nrrabnrWFLG10zLuWLBaGfZIPj/0jtE0ItPn6iWt6ALgrBr9ulLzqtbdVAoGAOLxn\n0fgZndJ+aYcN5avY6xqxqIvtp8HEJHkRQy1BD+xmvyHa34yPDYJ6x/OEP7KPPef8\niZ3iSpIxWN+AdFV2GmQshND96x5bjnlWb2ubBszxNK7VnJ0XHZTjE3O/W+NoAxoE\ngGoQGdLw+UvIWREWp3pEX8YM1ifSg44S0hfShQ0CgYEAuXYypOPhN72yYeD+aPaj\ntqbttquzLsQBdqd70yKDezt2S46PHUkAhfqrWPIfGy6cpX7XA+Uc8O0npJPySrUH\nDpc+AsFjakM5KCXkqqEVHPTfnI5crNmyiDn8f2o+CIsb+5j142AGgaqbiT+WIXBN\nPeUt9a0w5NJqFkw7NJR3HL4=\n-----END PRIVATE KEY-----\n",
+    "client_email": "account-asset-google-drive@abstract-water-464404-p6.iam.gserviceaccount.com",
+    "client_id": "115954902205798216476",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/account-asset-google-drive%40abstract-water-464404-p6.iam.gserviceaccount.com",
+    "universe_domain": "googleapis.com"
+}
