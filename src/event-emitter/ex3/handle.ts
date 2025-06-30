@@ -9,7 +9,7 @@ function run() {
 const startProcess = () => {
   console.log('--------- startProcess ----------- ');
 
-  new Promise((resolve, reject) => {
+  new Promise((resolve) => {
     setTimeout(() => {
       resolve(run());
     }, 0);
@@ -18,9 +18,9 @@ const startProcess = () => {
   console.log('--------- FINISH: startProcess ----------- ');
 };
 
-const afterProcess = () => {
-  console.log('--------- afterProcess ----------- ');
-};
+// const afterProcess = () => {
+//   console.log('--------- afterProcess ----------- ');
+// };
 
 export const handleProcess = (eventName: string) => {
   eventEmitter.on(eventName, startProcess);
