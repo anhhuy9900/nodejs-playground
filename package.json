@@ -44,6 +44,7 @@
     "@types/uuid": "^9.0.6",
     "archiver": "^6.0.0",
     "async": "^3.2.5",
+    "async_hooks": "^1.0.0",
     "async-lock": "^1.4.1",
     "aws-sdk": "^2.1489.0",
     "axios": "^1.6.0",

@@ -46,11 +46,11 @@ function delay(duration: number) {
 
 const app = express();
 // console.log(`Worker ${process.pid} started`);
-app.get('/thread-1', (rep, res) => {
+app.get('/thread-1', (_rep, res) => {
   res.send(`Performance example: ${process.pid}`);
 });
 
-app.get('/blocking', async (req, res) => {
+app.get('/blocking', async (_req, res) => {
   delay(10000);
 
   res.send(`Ding ding ding! ${process.pid}`);
