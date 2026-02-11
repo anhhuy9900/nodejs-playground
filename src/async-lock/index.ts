@@ -5,7 +5,7 @@ import TopicModel from '../lib/models/topic.model';
 
 const lock = new AsyncLock();
 
-export async function syncProcessRequest(reqInfo: Record<string, any>) {
+export async function syncProcessRequest(_reqInfo: Record<string, any>) {
   lock.acquire(
     'SYNC_PROCESS_REQUEST',
     async (done: () => void): Promise<void> => {

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WebSocket Pool Client</title>
+</head>
+<body>
+<h1>WebSocket Connection Pool Demo</h1>
+<input id="room" placeholder="Room name" value="general" />
+<button onclick="joinRoom()">Join Room</button>
+<button onclick="leaveRoom()">Leave Room</button>
+<br /><br />
+<input id="message" placeholder="Message" />
+<button onclick="sendMessage()">Send</button>
+<div id="messages"></div>
+
+<script>
+  const ws = new WebSocket('ws://localhost:3005');
+  let currentRoom = '';
+
+  ws.onmessage = (event) => {
+    const msg = JSON.parse(event.data);
+    const div = document.getElementById('messages');
+    div.innerHTML += `<p>${msg.type}: ${JSON.stringify(msg)}</p>`;
+  };
+
+  function joinRoom() {
+    currentRoom = document.getElementById('room').value;
+    ws.send(JSON.stringify({ type: 'join-room', room: currentRoom }));
+  }
+
+  function leaveRoom() {
+    ws.send(JSON.stringify({ type: 'leave-room', room: currentRoom }));
+  }
+
+  function sendMessage() {
+    const content = document.getElementById('message').value;
+    ws.send(JSON.stringify({ type: 'message', room: currentRoom, content }));
+  }
+</script>
+</body>
+</html>
