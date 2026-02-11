@@ -1,0 +1,1 @@
+export type ZmqMessageHandler = (topic: string, message: any) => void;
