@@ -1,18 +1,18 @@
 import { io } from 'socket.io-client';
 
-// const url = 'http://localhost:4700';
-const url = 'https://xidach-dui.enostd.gay';
+const url = 'http://localhost:4700';
+// const url = 'https://xidach-dui.enostd.gay';
 
 const socket = io(url, {
   transports: ['websocket'], // 👈 force WebSocket to avoid fallback polling issues
   timeout: 5000,
   reconnection: true,
   query: {
-    token: '8cc617b9-bb3b-42fa-b0e5-4d8ca3a2c70c',
+    token: 'd422c18f-d476-40d1-9114-e4fde45a085a',
   },
 });
 
-const roomId = '3929';
+const roomId = '8999110016646';
 
 socket.on('connect', () => {
   console.log('✅ Connected:', socket.id);
@@ -51,6 +51,11 @@ socket.on('glt', (msg) => {
 socket.on('scan-card', (msg) => {
   console.log('================================================================');
   console.log('[🔔 [scan-card] Event Message]:', msg);
+});
+
+socket.on('event-gift-code', (msg) => {
+  console.log('================================================================');
+  console.log('[🔔 [event-gift-code] Event Message]:', msg);
 });
 
 socket.on('disconnect', (reason) => {
