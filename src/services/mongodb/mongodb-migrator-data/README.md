@@ -1,4 +1,4 @@
-### Package Migration Schema and Data to Mongo
+### Package Migration Schema and Data to MongoDB
 - I want to build a npm package service to migrate schema, data, it include for other projects nodejs typescript
 - There are main features for migration package: allowing you to make changes (like creating tables, adding columns, or setting up associations) in a structured, trackable way
 - When I run the migration, it will check the schema and data, and if there are any changes, it will apply the changes to the database
