@@ -1,0 +1,53 @@
+{
+  "name": "mongodb-migrator-data",
+  "version": "1.0.0",
+  "description": "A MongoDB schema and data migration package for Node.js TypeScript projects",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "mongodb-migrator-data": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc && npm run postbuild",
+    "postbuild": "node -e \"require('fs').chmodSync('dist/cli.js', '755')\"",
+    "dev": "ts-node src/cli.ts",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "mongodb",
+    "migration",
+    "typescript",
+    "schema",
+    "data",
+    "database",
+    "migrate"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^11.1.0",
+    "mongodb": "^6.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "mongodb": ">=4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "mongodb": {
+      "optional": false
+    }
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
