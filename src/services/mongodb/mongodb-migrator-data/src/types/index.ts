@@ -1,4 +1,4 @@
-import { Db, MongoClient } from 'mongodb';
+import type { Db, MongoClient, MongoClientOptions } from 'mongodb';
 
 /**
  * Each migration file must implement this interface.
@@ -28,7 +28,12 @@ export interface MigrationRecord {
  * Configuration passed to the Migrator (programmatic API or config file).
  */
 export interface MigratorConfig {
-  /** MongoDB connection URI, e.g. "mongodb://localhost:27017" */
+  /**
+   * MongoDB connection URI.
+   * Credentials can be embedded directly in the URI:
+   *   mongodb://username:password@localhost:27017/?authSource=admin
+   * Or provided separately via `options.auth`.
+   */
   uri: string;
   /** Target database name */
   database: string;
@@ -36,6 +41,13 @@ export interface MigratorConfig {
   migrationsDir?: string;
   /** Collection name used to track applied migrations (default: "migration_history") */
   migrationsCollection?: string;
+  /**
+   * Additional MongoClient options (auth, tls, replicaSet, etc.).
+   * Use this to pass credentials without embedding them in the URI.
+   * @example
+   * options: { auth: { username: 'admin', password: 'secret' }, authSource: 'admin' }
+   */
+  options?: MongoClientOptions;
 }
 
 /**

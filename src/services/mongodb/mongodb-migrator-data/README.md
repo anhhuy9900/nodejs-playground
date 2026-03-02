@@ -177,6 +177,73 @@ mongodb-migrator-data/
         └── 20240102000000_add_posts_collection.ts
 ```
 
+### Build CLI
+
+```
+ Method 1 — Direct path install (fastest for dev iteration)                                                                                                                                               
+                                                                                                                                                                                                           
+  # ── Step 1: Build the package ──────────────────────────────────────────                                                                                                                                
+  cd /Volumes/Huy_HD/practices/nodejs-playground/src/services/mongodb/mongodb-migrator-data                                                                                                                
+  npm install          # install deps (chalk, commander, mongodb, ts-node, typescript)
+  npm run build        # compiles src/ → dist/
+
+  # ── Step 2: Create a test consumer project ─────────────────────────────
+  mkdir ~/test-migrator && cd ~/test-migrator
+  npm init -y
+
+  # ── Step 3: Install the package from its local path ────────────────────
+  npm install /Volumes/Huy_HD/practices/nodejs-playground/src/services/mongodb/mongodb-migrator-data
+  npm install -D ts-node typescript @types/node
+
+  # ── Step 4: Test the CLI ───────────────────────────────────────────────
+  npx mongodb-migrator-data --version
+  npx mongodb-migrator-data --help
+
+  Drawback: node_modules/mongodb-migrator-data is a symlink to the source folder. Rebuilding the package reflects immediately, but it doesn't simulate what a real consumer gets.
+
+  ---
+  Method 2 — npm pack tarball (recommended, most realistic)
+
+  This creates the exact same .tgz that npm publish would produce.
+
+  # ── Step 1: Build the package ──────────────────────────────────────────
+  cd /Volumes/Huy_HD/practices/nodejs-playground/src/services/mongodb/mongodb-migrator-data
+  npm install
+  npm run build
+
+  # ── Step 2: Pack into a tarball ────────────────────────────────────────
+  npm pack
+  # → creates: mongodb-migrator-data-1.0.0.tgz
+  # → also prints the exact files that would be published (verify dist/ is included)
+
+  # ── Step 3: Create a test consumer project ─────────────────────────────
+  mkdir ~/test-migrator && cd ~/test-migrator
+  npm init -y
+  npm install -D ts-node typescript @types/node
+  npm install mongodb
+
+  # ── Step 4: Install from the tarball (simulates npm install exactly) ───
+  npm install /Volumes/Huy_HD/practices/nodejs-playground/src/services/mongodb/mongodb-migrator-data/mongodb-migrator-data-1.0.0.tgz
+
+  # ── Step 5: Create the config file ────────────────────────────────────
+  cat > migrator.config.ts << 'EOF'
+  import { MigratorConfig } from 'mongodb-migrator-data';
+
+  const config: MigratorConfig = {
+    uri: 'mongodb://localhost:27017',
+    database: 'test_migrator_db',
+  };
+
+  export default config;
+
+  # ── Step 6: Run CLI commands ───────────────────────────────────────────
+  npx mongodb-migrator-data --version
+  npx mongodb-migrator-data generate create_users
+  npx mongodb-migrator-data status
+  npx mongodb-migrator-data up
+  npx mongodb-migrator-data down
+```
+
 ## License
 
 MIT

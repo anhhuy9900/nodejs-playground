@@ -32,7 +32,10 @@ function tryRegisterTsNode(): void {
  * ```
  */
 export class Migrator {
-  private readonly config: Required<MigratorConfig>;
+  private readonly config: MigratorConfig & {
+    migrationsDir: string;
+    migrationsCollection: string;
+  };
   private client: MongoClient | null = null;
   private db: Db | null = null;
   private store: MigrationStore | null = null;
@@ -47,7 +50,7 @@ export class Migrator {
 
   /** Opens the MongoDB connection and initialises the history store. */
   async connect(): Promise<void> {
-    this.client = new MongoClient(this.config.uri);
+    this.client = new MongoClient(this.config.uri, this.config.options ?? {});
     await this.client.connect();
     this.db = this.client.db(this.config.database);
     this.store = new MigrationStore(this.db, this.config.migrationsCollection);
