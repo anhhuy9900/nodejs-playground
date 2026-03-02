@@ -4,7 +4,7 @@ import OpenAI from 'openai';
 import sharp from 'sharp';
 
 const openai = new OpenAI({
-  apiKey: '',
+  apiKey: 'apiKey',
 });
 
 async function createImageVariation(): Promise<void> {
