@@ -1,12 +1,19 @@
-import type { Db, MongoClient, MongoClientOptions } from 'mongodb';
+import type { ClientSession, Db, MongoClient, MongoClientOptions } from 'mongodb';
 
 /**
  * Each migration file must implement this interface.
- * `up` applies the migration; `down` reverts it.
+ *
+ * `up`   — applies the migration (create collections, add indexes, seed data …)
+ * `down` — reverts the migration (drop collections, remove indexes …)
+ *
+ * The optional `session` parameter is provided when `useTransactions: true` is
+ * set in the config. Pass it to every MongoDB operation to enroll them in the
+ * transaction. Existing migration files that ignore the third argument continue
+ * to work without changes.
  */
 export interface MigrationFile {
-  up(db: Db, client: MongoClient): Promise<void>;
-  down(db: Db, client: MongoClient): Promise<void>;
+  up(db: Db, client: MongoClient, session?: ClientSession): Promise<void>;
+  down(db: Db, client: MongoClient, session?: ClientSession): Promise<void>;
 }
 
 /**
@@ -20,8 +27,14 @@ export interface MigrationRecord {
   appliedAt: Date;
   /** How long the migration took in milliseconds */
   executionTime: number;
-  /** Batch number — migrations in the same `up` run share a batch */
+  /** Batch number — migrations in the same `up` run share a batch number */
   batch: number;
+  /**
+   * SHA-256 hex digest of the migration file content at the time it was applied.
+   * Used by `status` to detect accidental edits to already-applied migrations.
+   * Absent on records created before checksum tracking was introduced.
+   */
+  checksum?: string;
 }
 
 /**
@@ -43,11 +56,36 @@ export interface MigratorConfig {
   migrationsCollection?: string;
   /**
    * Additional MongoClient options (auth, tls, replicaSet, etc.).
-   * Use this to pass credentials without embedding them in the URI.
    * @example
    * options: { auth: { username: 'admin', password: 'secret' }, authSource: 'admin' }
    */
   options?: MongoClientOptions;
+
+  // ── Phase 1: Production-safety options ────────────────────────────────────
+
+  /**
+   * Wrap each individual migration's `up` / `down` call in a MongoDB
+   * multi-document transaction.
+   *
+   * ⚠ Requires a replica set or sharded cluster (MongoDB 4.0+).
+   *   Will throw on a standalone instance.
+   *
+   * Default: false
+   */
+  useTransactions?: boolean;
+
+  /**
+   * Collection used to hold the distributed concurrency lock.
+   * Default: "migration_locks"
+   */
+  lockCollection?: string;
+
+  /**
+   * Seconds before a lock is considered stale and is force-released.
+   * Protects against a crashed migration process leaving the lock forever.
+   * Default: 60
+   */
+  lockTtlSeconds?: number;
 }
 
 /**
@@ -59,6 +97,15 @@ export interface MigrationStatus {
   appliedAt?: Date;
   batch?: number;
   executionTime?: number;
+  /**
+   * Integrity check result (only present for applied migrations):
+   * - `"ok"`       — file matches the checksum stored when it was applied
+   * - `"modified"` — file has changed since it was applied  ⚠ dangerous
+   * - `"unknown"`  — migration was applied before checksum tracking was added
+   */
+  integrity?: 'ok' | 'modified' | 'unknown';
+  /** Stored SHA-256 checksum (hex) */
+  checksum?: string;
 }
 
 /**
@@ -68,6 +115,9 @@ export interface RunnerOptions {
   config: MigratorConfig;
   /** Limit how many migrations to run/revert */
   steps?: number;
-  /** Preview what would run without actually executing */
+  /**
+   * Preview what would run without connecting to the database or making changes.
+   * Prints the list of pending / to-be-reverted migrations and exits.
+   */
   dryRun?: boolean;
 }

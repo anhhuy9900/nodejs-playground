@@ -26,6 +26,10 @@ export { MigrationGenerator } from './core/migration-generator';
 
 // ─── Store ───────────────────────────────────────────────────────────────────
 export { MigrationStore } from './store/migration-store';
+export { MigrationLock } from './store/migration-lock';
+
+// ─── Utils ───────────────────────────────────────────────────────────────────
+export { computeFileChecksum } from './utils/checksum';
 
 // ─── Utilities ───────────────────────────────────────────────────────────────
 export { loadConfig } from './utils/config-loader';

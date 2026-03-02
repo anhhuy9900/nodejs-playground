@@ -3,7 +3,8 @@ import { MigrationRecord } from '../types';
 
 /**
  * Manages the migration history collection in MongoDB.
- * Tracks which migrations have been applied, when, and in what batch.
+ * Tracks which migrations have been applied, when, in what batch,
+ * and their content checksum for integrity verification.
  */
 export class MigrationStore {
   private collection: Collection<MigrationRecord>;
@@ -14,7 +15,7 @@ export class MigrationStore {
 
   /**
    * Ensures required indexes exist on the history collection.
-   * Safe to call multiple times (idempotent).
+   * Idempotent — safe to call on every connect().
    */
   async initialize(): Promise<void> {
     await this.collection.createIndex({ name: 1 }, { unique: true });
@@ -22,7 +23,7 @@ export class MigrationStore {
     await this.collection.createIndex({ appliedAt: 1 });
   }
 
-  /** Returns all applied migrations in ascending order. */
+  /** Returns all applied migrations in ascending chronological order. */
   async getApplied(): Promise<MigrationRecord[]> {
     return this.collection.find({}).sort({ appliedAt: 1 }).toArray();
   }
@@ -49,17 +50,22 @@ export class MigrationStore {
       .toArray();
   }
 
-  /** Records a successfully applied migration. */
+  /**
+   * Records a successfully applied migration.
+   * `checksum` is the SHA-256 hex digest of the migration file content.
+   */
   async record(
     name: string,
     executionTime: number,
     batch: number,
+    checksum: string,
   ): Promise<void> {
     await this.collection.insertOne({
       name,
       appliedAt: new Date(),
       executionTime,
       batch,
+      checksum,
     });
   }
 

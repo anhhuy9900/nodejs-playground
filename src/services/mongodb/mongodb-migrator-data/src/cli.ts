@@ -4,6 +4,8 @@ import { upCommand } from './commands/up.command';
 import { downCommand } from './commands/down.command';
 import { statusCommand } from './commands/status.command';
 import { generateCommand } from './commands/generate.command';
+import { Migrator } from './core/migrator';
+import { loadConfig } from './utils/config-loader';
 import { logger } from './utils/logger';
 
 const program = new Command();
@@ -19,14 +21,20 @@ program
   .description('Run all pending migrations')
   .option('-c, --config <path>', 'Path to migrator config file')
   .option('-s, --steps <number>', 'Maximum number of migrations to run', parseInt)
-  .action(async (options: { config?: string; steps?: number }) => {
-    try {
-      await upCommand(options.config, options.steps);
-    } catch (err) {
-      logger.error(err instanceof Error ? err.message : String(err));
-      process.exit(1);
-    }
-  });
+  .option(
+    '--dry-run',
+    'Preview which migrations would run without executing anything',
+  )
+  .action(
+    async (options: { config?: string; steps?: number; dryRun?: boolean }) => {
+      try {
+        await upCommand(options.config, options.steps, options.dryRun);
+      } catch (err) {
+        logger.error(err instanceof Error ? err.message : String(err));
+        process.exit(1);
+      }
+    },
+  );
 
 // ─── down ────────────────────────────────────────────────────────────────────
 program
@@ -38,19 +46,27 @@ program
     'Number of migrations to revert (use -1 to revert the entire last batch)',
     parseInt,
   )
-  .action(async (options: { config?: string; steps?: number }) => {
-    try {
-      await downCommand(options.config, options.steps ?? 1);
-    } catch (err) {
-      logger.error(err instanceof Error ? err.message : String(err));
-      process.exit(1);
-    }
-  });
+  .option(
+    '--dry-run',
+    'Preview which migrations would be reverted without executing anything',
+  )
+  .action(
+    async (options: { config?: string; steps?: number; dryRun?: boolean }) => {
+      try {
+        await downCommand(options.config, options.steps ?? 1, options.dryRun);
+      } catch (err) {
+        logger.error(err instanceof Error ? err.message : String(err));
+        process.exit(1);
+      }
+    },
+  );
 
 // ─── status ──────────────────────────────────────────────────────────────────
 program
   .command('status')
-  .description('Show the applied / pending status of all migrations')
+  .description(
+    'Show applied / pending status of all migrations (includes integrity check)',
+  )
   .option('-c, --config <path>', 'Path to migrator config file')
   .action(async (options: { config?: string }) => {
     try {
@@ -71,6 +87,42 @@ program
   .action((name: string, options: { config?: string }) => {
     try {
       generateCommand(name, options.config);
+    } catch (err) {
+      logger.error(err instanceof Error ? err.message : String(err));
+      process.exit(1);
+    }
+  });
+
+// ─── repair ──────────────────────────────────────────────────────────────────
+program
+  .command('repair')
+  .description('Fix common migration issues (see sub-options below)')
+  .option('-c, --config <path>', 'Path to migrator config file')
+  .option(
+    '--unlock',
+    'Force-release a stale concurrency lock left by a crashed process',
+  )
+  .action(async (options: { config?: string; unlock?: boolean }) => {
+    if (!options.unlock) {
+      logger.warn('No repair action specified. Use --unlock to release a stale lock.');
+      process.exit(0);
+    }
+
+    try {
+      const config = loadConfig(options.config);
+      const migrator = new Migrator(config);
+      await migrator.connect();
+
+      try {
+        const released = await migrator.forceUnlock();
+        if (released) {
+          logger.success('Stale lock released successfully.');
+        } else {
+          logger.info('No lock found — nothing to release.');
+        }
+      } finally {
+        await migrator.disconnect();
+      }
     } catch (err) {
       logger.error(err instanceof Error ? err.message : String(err));
       process.exit(1);

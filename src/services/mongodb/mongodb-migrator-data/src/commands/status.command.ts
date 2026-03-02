@@ -4,7 +4,8 @@ import { loadConfig } from '../utils/config-loader';
 import { logger } from '../utils/logger';
 
 /**
- * Prints a table showing the applied/pending status of every migration file.
+ * Prints the applied / pending status of every migration file.
+ * Also shows an integrity badge when the file has changed since it was applied.
  */
 export async function statusCommand(
   configPath: string | undefined,
@@ -27,10 +28,20 @@ export async function statusCommand(
 
     for (const s of statuses) {
       if (s.status === 'applied') {
+        // ── Integrity badge ────────────────────────────────────────────────
+        let integrityBadge = '';
+        if (s.integrity === 'modified') {
+          integrityBadge = '  ' + chalk.red.bold('⚠ MODIFIED');
+        } else if (s.integrity === 'unknown') {
+          integrityBadge = '  ' + chalk.gray('? no checksum');
+        }
+
         const meta = chalk.gray(
           `batch #${s.batch}  ${s.appliedAt?.toISOString()}  ${s.executionTime}ms`,
         );
-        console.log(`  ${chalk.green('✔')} ${chalk.green(s.name)}  ${meta}`);
+        console.log(
+          `  ${chalk.green('✔')} ${chalk.green(s.name)}  ${meta}${integrityBadge}`,
+        );
       } else {
         console.log(
           `  ${chalk.yellow('○')} ${chalk.yellow(s.name)}  ${chalk.gray('(pending)')}`,
@@ -40,6 +51,7 @@ export async function statusCommand(
 
     const applied = statuses.filter((s) => s.status === 'applied').length;
     const pending = statuses.filter((s) => s.status === 'pending').length;
+    const modified = statuses.filter((s) => s.integrity === 'modified').length;
 
     console.log('');
     console.log(
@@ -49,6 +61,19 @@ export async function statusCommand(
           `Pending: ${chalk.yellow(pending)}`,
       ),
     );
+
+    // ── Integrity warning banner ───────────────────────────────────────────
+    if (modified > 0) {
+      console.log('');
+      logger.warn(
+        `${modified} applied migration(s) have been modified since they were applied!`,
+      );
+      logger.warn(
+        'Editing an applied migration is dangerous — the database is already in the\n' +
+          '  state produced by the original file. Consider writing a new migration instead.',
+      );
+    }
+
     console.log('');
   } finally {
     await migrator.disconnect();
